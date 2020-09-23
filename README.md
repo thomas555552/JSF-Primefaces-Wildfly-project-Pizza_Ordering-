@@ -2,5 +2,5 @@
 > JAVA <br>
 > JSF with Primefaces framework<br>
 > Wildfly 14 server<br>
-> MySQL server
+> MySQL server<br>
 > Need to setup servers and create the database with commands in db_.sql

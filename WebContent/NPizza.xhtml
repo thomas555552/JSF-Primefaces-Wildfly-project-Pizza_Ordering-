@@ -1,0 +1,102 @@
+<html xmlns="http://www.w3.org/1999/xhtml"  
+    xmlns:h="http://java.sun.com/jsf/html"  
+    xmlns:f="http://java.sun.com/jsf/core"  
+    xmlns:mp="http://primefaces.org/ui/material"
+    xmlns:p="http://primefaces.org/ui">
+    
+    
+    
+<h:head>
+
+<script name="jquery/jquery.js" library="primefaces"></script>
+<title>Pizza</title>
+<style>
+#centeritem{ display:block; margin: 0 auto;  text-align:center; width:1000px;}
+</style>
+</h:head>
+<h:body style="background-image: url(bg.jpg)">
+<p:tabMenu activeIndex="#{param.i}" style="width: 1100px; margin-left:50px;">
+                        <p:menuitem style="font-size: 20px;" value="Főoldal" outcome="index.xhtml" icon="ui-icon-home">
+                            <f:param name="i" value="0" />
+                        </p:menuitem>
+                        <p:menuitem style="font-size: 20px;" value="Felhasználó regisztrálása" outcome="NUser.xhtml" icon="ui-icon-plus">
+                            <f:param name="i" value="1" />
+                        </p:menuitem>
+                        <p:menuitem style="font-size: 20px;" value="Pizza hozzáadása" outcome="NPizza.xhtml" icon="ui-icon-plus">
+                            <f:param name="i" value="2" />
+                        </p:menuitem>
+                        <p:menuitem style="font-size: 20px;" value="Rendelés felvétele" outcome="NOrder.xhtml" icon="ui-icon-cart">
+                            <f:param name="i" value="3" />
+                            </p:menuitem>
+                            <p:menuitem style="font-size: 20px;" value="Sütők állapota" outcome="SSuto.xhtml" icon="ui-icon-info">
+                            <f:param name="i" value="4" />
+                        </p:menuitem>
+                    </p:tabMenu>
+                    <br/>
+                    
+     
+         <div id="centeritem">       
+    <h:form  id="jsfexample" >
+    <p:panel  header="Pizza adatai:">
+     <p:messages autoUpdate="true"/>
+    
+    	<h:panelGrid columns="3" cellpadding="5" style="margin:auto;"  >
+    	 
+    	<p:outputLabel style="font-size: 18px; font-weight: bold; border-bottom: 2px solid purple;" for="PizzaID" value="ID: " />
+        <p:inputText style="width: 120%;" id="PizzaID" value="#{database.newPizzaID}" required="true" label="Id"><f:validateLength minimum = "1" maximum="4" /></p:inputText>
+         <p:tooltip for="PizzaID" value="Pizza ID" trackMouse="true"/> 
+        
+        <p:outputLabel style="font-size: 18px; font-weight: bold; border-bottom: 2px solid purple;" for="price" value="Ar: " />
+        <p:inputText style="width: 120%;" id="price" value="#{database.newPizzaPrice}" placeholder="Pizza ára" required="true" label="Name"/>
+        <p:tooltip for="price" value="Pizza ára" trackMouse="true"/> 
+   
+        <p:outputLabel style="font-size: 18px; font-weight: bold; border-bottom: 2px solid purple;" for="size" value="Méret: " />
+        <p:inputText style="width: 120%;" id="size" value="#{database.newPizzaSize}" placeholder="Pizza mérete" />
+        <p:tooltip for="size" value="Pizza mérete" trackMouse="true"/>
+        
+        <p:outputLabel style="font-size: 18px; font-weight: bold; border-bottom: 2px solid purple;" for="description" value="Leírás: " />
+        <p:inputText style="width: 120%;" id="description" value="#{database.newPizzaDescription}" placeholder="Pizza leírása" />
+        <p:tooltip for="description" value="Pizza leírása" trackMouse="true"/>
+        
+          <p:outputLabel style="font-size: 18px; font-weight: bold; border-bottom: 2px solid purple;" for="cookingTime" value="Sütési idő: " />
+        <p:inputText style="width: 120%;" id="cookingTime" value="#{database.newPizzaCookingTime}" placeholder="Pizza sütési ideje" />
+        <p:tooltip for="cookingTime" value="Pizza sütési ideje" trackMouse="true"/>
+        
+        </h:panelGrid>
+       <p:commandButton style="font-size: 20px; margin-right:10px;" value="Hozzáadás" id="click" actionListener="#{database.addPizza()}" oncomplete="PF('dlg1').show()" icon="ui-icon-check" update=":table:PizzaTable" validateClient="true"/><br/>
+       </p:panel>
+       
+       <p:dialog style="font-size: 20px;" header="Eredmény" widgetVar="dlg1" minWidth="600" minHeight="200">
+    <h:outputText value="Sikeresen hozzáadva!"/>
+	</p:dialog>
+       </h:form>
+       </div>
+   
+      
+        <h:form id="table" > 
+                        <p:dataTable id="PizzaTable" value="#{database.ListPizzas()}" var="pizza" paginator="true" rows="20" rowKey="#{pizza.PID}" selectionMode="single">
+                            <p:column headerText="Pizza ID" >
+                                #{pizza.PID}  
+                            </p:column>
+                            <p:column headerText="Ár" >
+                                #{pizza.ar}
+                            </p:column>
+                            <p:column headerText="Méret">
+                                #{pizza.meret}
+                            </p:column>
+                            <p:column headerText="Leírás" >
+                                #{pizza.leiras}
+                            </p:column>  
+                            <p:column headerText="Sütési idő" >
+                                #{pizza.sutido}
+                            </p:column>                        
+                        </p:dataTable>
+                    </h:form>
+                    
+         
+        
+ 
+        
+    
+</h:body>
+</html>

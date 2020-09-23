@@ -1,0 +1,119 @@
+<html xmlns="http://www.w3.org/1999/xhtml"  
+    xmlns:h="http://java.sun.com/jsf/html"  
+    xmlns:f="http://java.sun.com/jsf/core"  
+    xmlns:mp="http://primefaces.org/ui/material"
+    xmlns:p="http://primefaces.org/ui">
+    
+    
+    
+<h:head>
+
+<script name="jquery/jquery.js" library="primefaces"></script>
+<title>Rendelések</title>
+<style>
+#centeritem{ display:block; margin: 0 auto;  text-align:center; width:1000px;}
+</style>
+</h:head>
+<h:body style="background-image: url(bg.jpg)">
+<p:tabMenu activeIndex="#{param.i}" style="width: 1100px; margin-left:50px;">
+                        <p:menuitem style="font-size: 20px;" value="Főoldal" outcome="index.xhtml" icon="ui-icon-home">
+                            <f:param name="i" value="0" />
+                        </p:menuitem>
+                        <p:menuitem style="font-size: 20px;" value="Felhasználó regisztrálása" outcome="NUser.xhtml" icon="ui-icon-plus">
+                            <f:param name="i" value="1" />
+                        </p:menuitem>
+                        <p:menuitem style="font-size: 20px;" value="Pizza hozzáadása" outcome="NPizza.xhtml" icon="ui-icon-plus">
+                            <f:param name="i" value="2" />
+                        </p:menuitem>
+                        <p:menuitem style="font-size: 20px;" value="Rendelés felvétele" outcome="NOrder.xhtml"  icon="ui-icon-cart">
+                            <f:param name="i" value="3" />
+                            </p:menuitem>
+                            <p:menuitem style="font-size: 20px;" value="Sütők állapota" outcome="SSuto.xhtml" icon="ui-icon-info">
+                            <f:param name="i" value="4" />
+                        </p:menuitem>
+                    </p:tabMenu>
+                    <br/>
+                    
+     
+          <div id="centeritem">       
+    <h:form  id="jsfexample" >
+    <p:panel  header="Rendelés adatai:">
+     <p:messages autoUpdate="true"/>
+    
+    	<h:panelGrid columns="3" cellpadding="5" style="margin:auto; "  >
+    	 
+    	<p:outputLabel style="font-size: 18px; font-weight: bold; border-bottom: 2px solid coral;" for="OrderID" value="ID: " />
+        <p:inputText style="width: 120%;" id="OrderID" value="#{database.newOrderID}" required="true" label="Id"><f:validateLength minimum = "2" maximum="5" /></p:inputText>
+         <p:tooltip for="OrderID" value="Rendelés ID" trackMouse="true"/> 
+        
+         <p:outputLabel for="user" value="Felhasználó: " style="font-size: 18px; font-weight: bold; border-bottom: 2px solid coral;" />
+             <p:selectOneMenu id="user" value="#{database.newOrderFID}" style="width: 100%;" required="true">  
+                <f:selectItem itemLabel="Felhasználó választása" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{database.OrderFIDs()}" />
+            </p:selectOneMenu> <br />
+        
+        
+        <p:outputLabel for="pizza" value="Pizza: " style="font-size: 18px; font-weight: bold; border-bottom: 2px solid coral;" />
+             <p:selectOneMenu id="pizza" value="#{database.newOrderPID}" style="width: 100%;" required="true">  
+                <f:selectItem itemLabel="Pizza választása" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{database.OrderPIDs()}" />
+            </p:selectOneMenu> <br />
+        
+          <p:outputLabel for="orderNumb" value="Rendelés száma: " style="font-size: 18px; font-weight: bold; border-bottom: 2px solid coral;" />
+             <p:selectOneMenu id="orderNumb" value="#{database.newOrderNumber}" style="width: 100%;" >  
+                <f:selectItem itemLabel="Új rendelés" itemValue="999" noSelectionOption="false" />
+                <f:selectItems value="#{database.OrderNumbers()}" />
+            </p:selectOneMenu> <br />
+        
+   
+        
+        </h:panelGrid>
+       <p:commandButton style="font-size: 20px; margin-right:10px;" value="Hozzáadás" id="click" actionListener="#{database.addOrder()}" oncomplete="PF('dlg1').show()" icon="ui-icon-check"  update=":table:OrderTable" validateClient="true"/><br/>
+       <br />
+       
+       </p:panel>
+       <br />
+ 
+       <p:dialog style="font-size: 20px;" header="Eredmény" widgetVar="dlg1" minWidth="600" minHeight="200">
+    <h:outputText value="Sikeresen hozzáadva!"/>
+	</p:dialog>
+       </h:form>
+       </div>
+   
+   
+       <div align="left" style="display:block; width:500px;">
+       <h:form id="delete">
+       <p:panel  header="Törlés:">
+    	<h:panelGrid columns="3" cellpadding="5" style="margin:auto; ">
+        <p:outputLabel style="font-size: 18px; font-weight: bold; border-bottom: 2px solid black;" for="deleteOrderByOrderNumber" value="Rendelés száma: " />
+        <p:inputText id="deleteOrderByOrderNumber" value="#{database.deleteOrderByNumber}" required="true" /><p:tooltip for="deleteOrderByOrderNumber" value="Add meg a rendelés számát" trackMouse="true"/>
+       <p:commandButton style="font-size: 20px; background:tomato;" value="Törlés" id="click" actionListener="#{database.deleteOrder()}" onclick="PF('dlg2').show();" icon="ui-icon-closethick" update=":table:OrderTable"/><br/>
+       </h:panelGrid>
+       <p:dialog header="Eredmény" widgetVar="dlg2" minHeight="40">
+    <h:outputText value="Sikeresen törölve!" />
+	</p:dialog>
+	</p:panel>
+       </h:form>
+       </div>
+      
+        <h:form id="table" > 
+                        <p:dataTable id="OrderTable" value="#{database.ListOrders()}" var="order" paginator="true" rows="20" rowKey="#{order.rszam}" selectionMode="single">
+                            <p:column headerText="Rendelés SZÁMA">
+                                #{order.rszam}  
+                            </p:column>
+                            <p:column headerText="Ár" >
+                                #{order.arSUM}
+                            </p:column>
+                            <p:column headerText="Készidő" >
+                                #{order.keszido}
+                            </p:column>                         
+                        </p:dataTable>
+                    </h:form>
+                    
+         
+        
+ 
+        
+    
+</h:body>
+</html>
